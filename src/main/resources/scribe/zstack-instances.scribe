@@ -1,0 +1,103 @@
+resource "instance-type" "zstack-provision-provider" {
+	name = "ZStack Central"
+	code = "zstack-provision-provider"
+	description = "Spin up any VM Image on ZStack Central infrastructure."
+	environmentPrefix = "ZSTACK"
+	category = "cloud"
+	active = true
+	enabled = true
+	hasConfig = false
+	hasSettings = false
+	hasDeployment = false
+	hasAutoScale = true
+	versions = ["1.0"]
+	optionTypes = [
+		"instanceType.zstack.template"
+	]
+	pluginIconPath = "zstack.svg"
+	pluginIconHidpiPath= "zstack.svg"
+	pluginIconDarkPath = "zstack-dark.svg"
+	pluginIconDarkHidpiPath = "zstack-dark.svg"
+}
+
+resource "option-type" "instanceType-zstack-template" {
+  code         = "instanceType.zstack.template"
+  type         = "select"
+  name         = "Template"
+  category     = "instanceType.zstack"
+  fieldName    = "imageId"
+  optionSource = "zstackProvisionImage"
+  fieldCode    = "gomorpheus.optiontype.Image"
+  fieldLabel   = "Image"
+  fieldContext = "config"
+  fieldGroup   = "Options"
+  required     = true
+  enabled      = true
+  editable     = false
+  global       = false
+  placeHolder  = null
+  helpBlock    = ""
+  defaultValue = null
+  custom       = false
+  displayOrder = 1
+  fieldClass   = null
+  description  = "Choose from a list of Virtual Images that might want to be provisioned."
+}
+
+resource "workload-type" "zstack-provision-provider-1_0" {
+	code = "zstack-provision-provider-1.0"
+	shortName = "zstack-central"
+	name = "ZStack Central"
+	account = null
+	account = null
+	ports = []
+	containerVersion = "1.0"
+	serverType = "vm"
+	showServerLogs = true
+	statTypeCode = "vm"
+	logTypeCode = "zstack-central"
+	category = "cloud"
+	provisionType = "zstack-provision-provider"
+	backupType = "ZStackSnapshot"
+	actions = [{code = "generic-remove-node"}]
+}
+
+resource "workload-type-set" "zstack-1_0-set" {
+	code = "zstack-1.0-set"
+	workloadType = workload-type.zstack-provision-provider-1_0
+	priorityOrder = 0
+	dynamicCount = true
+	containerCount = 1
+}
+
+resource "instance-type-layout" "zstack-1_0-single" {
+ 	code = "zstack-1.0-single"
+	name = "ZStack Central VM"
+	account = null
+	sortOrder = 0
+	instanceVersion = "1.0"
+	description = "This will provision a single vm"
+	instanceType = instance-type.zstack-provision-provider
+	serverCount = 1
+	portCount = 0
+	enabled = true
+	creatable = true
+	workloads = [
+		workload-type-set.zstack-1_0-set
+	]
+	actions = [{code = "generic-add-node"}]
+	provisionType = "zstack-provision-provider"
+	optionTypes = []
+}
+
+resource "scale-action" "zstack-1_0-single" {
+	code = "zstack-1_0-single"
+	scaleType = "action"
+	layout = instance-type-layout.zstack-1_0-single
+	upAction {
+		code = "generic-add-node"
+	}
+	downAction {
+		code = "generic-remove-node"
+	}
+}

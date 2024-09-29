@@ -1,0 +1,36 @@
+resource "service-plan-price-set" "zstack-vm-512" {
+  servicePlan           = "zstack-vm-512",
+  priceSet              = "default.priceset"
+}
+resource "service-plan-price-set" "zstack-vm-1024" {
+  servicePlan           = "zstack-vm-1024",
+  priceSet              = "default.priceset"
+}
+resource "service-plan-price-set" "zstack-vm-2048" {
+  servicePlan           = "zstack-vm-2048",
+  priceSet              = "default.priceset"
+}
+resource "service-plan-price-set" "zstack-vm-4096" {
+  servicePlan           = "zstack-vm-4096",
+  priceSet              = "default.priceset"
+}
+resource "service-plan-price-set" "zstack-vm-8192" {
+  servicePlan           = "zstack-vm-8192",
+  priceSet              = "default.priceset"
+}
+resource "service-plan-price-set" "zstack-vm-16384" {
+  servicePlan           = "zstack-vm-16384",
+  priceSet              = "default.priceset"
+}
+resource "service-plan-price-set" "zstack-vm-24576" {
+  servicePlan           = "zstack-vm-24576",
+  priceSet              = "default.priceset"
+}
+resource "service-plan-price-set" "zstack-vm-32768" {
+  servicePlan           = "zstack-vm-32768",
+  priceSet              = "default.priceset"
+}
+resource "service-plan-price-set" "internal-custom-zstack" {
+  servicePlan           = "internal-custom-zstack",
+  priceSet              = "internal.custom.zstack.priceset"
+}

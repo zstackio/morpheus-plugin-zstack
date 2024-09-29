@@ -1,0 +1,102 @@
+resource "option-type" "instanceType-zstack-template" {
+  code         = "instanceType.zstack.template"
+  type         = "select"
+  name         = "Template"
+  category     = "instanceType.zstack"
+  fieldName    = "imageId"
+  optionSource = "zstackProvisionImage"
+  fieldCode    = "gomorpheus.optiontype.Image"
+  fieldLabel   = "Image"
+  fieldContext = "config"
+  fieldGroup   = "Options"
+  required     = true
+  enabled      = true
+  editable     = false
+  global       = false
+  placeHolder  = null
+  helpBlock    = ""
+  defaultValue = null
+  custom       = false
+  displayOrder = 1
+  fieldClass   = null
+  description  = "Choose from a list of Virtual Images that might want to be provisioned."
+}
+
+resource "workload-type" "zstack-1_0" {
+  code             = "zstack-1.0"
+  shortName        = "zstack"
+  name             = "Single XCP-ng VM"
+  ports = []
+  containerVersion = "1.0"
+  repositoryImage  = ""
+  entryPoint       = ""
+  category         = "zstack"
+  statTypeCode     = "vm"
+  logTypeCode      = "zstack"
+  checkTypeCode    = "vmCheck"
+  serverType       = "vm"
+  mountPoint       = "/data"
+  provisionType    = "zstack"
+  actions = ["generic-remove-node"]
+}
+
+resource "workload-type-set" "zstack-1_0-set" {
+  code           = "zstack-1.0-set"
+  workloadType   = workload-type.zstack-1_0
+  priorityOrder  = 0
+  dynamicCount   = true
+  containerCount = 1
+}
+
+resource "instance-type" "zstack" {
+  code                    = "zstack"
+  name                    = "XCP-ng"
+  category                = "cloud"
+  active                  = true
+  enabled                 = true
+  viewSet                 = "zstack"
+  stackTier               = 30
+  hasConfig               = false
+  hasSettings             = false
+  hasDeployment           = false
+  deploymentService       = "defaultDeployService"
+  versions = ["1.0"]
+  hasAutoScale            = true
+  provisionService        = "zstackContainerService"
+  provisionTypeDefault    = true
+  environmentPrefix       = "ZSTACK"
+  provisionSelectType     = "zone"
+  provisionType           = "zstack"
+  pluginIconPath          = "zstack.svg"
+  pluginIconDarkPath      = "zstack-dark.svg"
+  pluginIconHidpiPath     = "zstack.svg"
+  pluginIconDarkHidpiPath = "zstack-dark.svg"
+  optionTypes             = [
+    "instanceType.zstack.template"
+  ]
+}
+
+resource "instance-type-layout" "zstack-1_0-single" {
+  code            = "zstack-1.0-single"
+  name            = "Single ZStack VM"
+  sortOrder       = 0
+  instanceVersion = "1.0"
+  description     = "This will provision a single process with no redundancy"
+  instanceType    = instance-type.zstack
+  serverCount     = 1
+  portCount       = 1
+  enabled         = true
+  creatable       = true
+  containers      = [workload-type-set.zstack-1_0-set]
+  actions         = ["generic-add-node"]
+  optionTypes     = []
+  provisionType   = "zstack"
+}
+
+resource "scale-action" "zstack-1_0-single" {
+  code       = "zstack-1.0-single"
+  scaleType  = "action"
+  layout     = instance-type-layout.zstack-1_0-single
+  upAction   = "generic-add-node"
+  downAction = "generic-remove-node"
+}
