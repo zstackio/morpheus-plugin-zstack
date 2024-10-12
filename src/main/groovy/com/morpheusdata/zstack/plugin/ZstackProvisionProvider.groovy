@@ -324,7 +324,7 @@ class ZstackProvisionProvider extends AbstractProvisionProvider implements Workl
             log.info("ZstackProvisionProvider vmInfo: ${vmInfo}")
             def createResults = ZStackComputeUtility.createVm(client, authConfig, vmInfo)
             if (createResults.success != true) {
-                return new ServiceResponse(success: false, msg: provisionResponse.message ?: 'createVm config error', error: provisionResponse.message, data: provisionResponse)
+                return new ServiceResponse(success: false, msg: provisionResponse.message ?: "createVm config error: ${createResults.error}", error: provisionResponse.message, data: provisionResponse)
             }
 
             context.async.process.startProcessStep(process, new ProcessEvent(type: ProcessEvent.ProcessType.provisionLaunch), 'starting vm')

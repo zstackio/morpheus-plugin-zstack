@@ -1,25 +1,3 @@
-resource "instance-type" "zstack-provision-provider" {
-	name = "ZStack Central"
-	code = "zstack-provision-provider"
-	description = "Spin up any VM Image on ZStack Central infrastructure."
-	environmentPrefix = "ZSTACK"
-	category = "cloud"
-	active = true
-	enabled = true
-	hasConfig = false
-	hasSettings = false
-	hasDeployment = false
-	hasAutoScale = true
-	versions = ["1.0"]
-	optionTypes = [
-		"instanceType.zstack.template"
-	]
-	pluginIconPath = "zstack.svg"
-	pluginIconHidpiPath= "zstack.svg"
-	pluginIconDarkPath = "zstack-dark.svg"
-	pluginIconDarkHidpiPath = "zstack-dark.svg"
-}
-
 resource "option-type" "instanceType-zstack-template" {
   code         = "instanceType.zstack.template"
   type         = "select"
@@ -48,8 +26,6 @@ resource "workload-type" "zstack-provision-provider-1_0" {
 	code = "zstack-provision-provider-1.0"
 	shortName = "zstack-central"
 	name = "ZStack Central"
-	account = null
-	account = null
 	ports = []
 	containerVersion = "1.0"
 	serverType = "vm"
@@ -68,6 +44,28 @@ resource "workload-type-set" "zstack-1_0-set" {
 	priorityOrder = 0
 	dynamicCount = true
 	containerCount = 1
+}
+
+resource "instance-type" "zstack-provision-provider" {
+	name = "ZStack Central"
+	code = "zstack-provision-provider"
+	description = "Spin up any VM Image on ZStack Central infrastructure."
+	environmentPrefix = "ZSTACK"
+	category = "cloud"
+	active = true
+	enabled = true
+	hasConfig = false
+	hasSettings = false
+	hasDeployment = false
+	hasAutoScale = true
+	versions = ["1.0"]
+	optionTypes = [
+		"instanceType.zstack.template"
+	]
+	pluginIconPath = "zstack.svg"
+	pluginIconHidpiPath= "zstack.svg"
+	pluginIconDarkPath = "zstack-dark.svg"
+	pluginIconDarkHidpiPath = "zstack-dark.svg"
 }
 
 resource "instance-type-layout" "zstack-1_0-single" {

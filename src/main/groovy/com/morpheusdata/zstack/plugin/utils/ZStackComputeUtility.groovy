@@ -150,22 +150,19 @@ class ZStackComputeUtility {
                     results = callApi(client, apiUrl, path, session, [headers: buildHeaders([:])], 'GET')
                     log.info("call back results: ${results}")
 
-                    if (!results.success) {
-                        break
-                    }
-
                     if (results.data?.inventory?.uuid) {
                         pending = false
                         rtn.success = true
                         rtn.results = results.data
                     } else {
                         rtn.error = "createVm failed, ${results.data.error}"
+                        break
                     }
 
                     attempts++
                 }
 
-                if (pending) {
+                if (pending && attempts == timeoutInSec) {
                     rtn.error = "createVm timed out after ${attempts} attempts"
                 }
             } else if (results.error == UNAUTHORIZED_ERROR) {
