@@ -241,7 +241,9 @@ class ZstackProvisionProvider extends AbstractProvisionProvider implements Workl
         List<Long> dataVolumesSizes = opts.volumes.findAll { it.rootVolume == false }.collect {
             it.maxStorage == 0 ? it.size * 1024L * 1024L * 1024L : it.maxStorage
         }
-        List<String> networkIds = opts.networkInterfaces.findAll { it.network?.id != null }.collect {
+        List<String> networkIds = opts.networkInterfaces.findAll {
+            it.network?.id != null || it.network?.id != ""
+        }.collect {
             it.network.id
         }
         Long imageId = opts.customOptions.imageId
@@ -254,14 +256,21 @@ class ZstackProvisionProvider extends AbstractProvisionProvider implements Workl
         log.info "validateWorkload cpuNum : ${cpuNum} , menNum: ${menNum}"
 
         if (rootVolumesSizes.size() != 1) {
-            return new ServiceResponse(success: false, msg: 'root volume is required')
+            return ServiceResponse.error("root volume is required")
         }
-        if (networkIds.size() != 1) {
-            return new ServiceResponse(success: false, msg: 'network must select at least one')
+
+        if (rootVolumePsId.isEmpty()) {
+            return ServiceResponse.error("ps must select at least one")
         }
-        if (imageId == null) {
-            return new ServiceResponse(success: false, msg: 'image must select at least one')
+
+        if (Objects.equals(networkIds.first(), null)) {
+            return ServiceResponse.error("network must select at least one")
         }
+
+        if (Objects.equals(imageId, null)) {
+            return ServiceResponse.error("image must select at least one")
+        }
+
         return ServiceResponse.success()
     }
 

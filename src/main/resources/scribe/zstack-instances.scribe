@@ -47,7 +47,7 @@ resource "workload-type-set" "zstack-1_0-set" {
 }
 
 resource "instance-type" "zstack-provision-provider" {
-	name = "ZStack Central"
+	name = "ZStack Vm"
 	code = "zstack-provision-provider"
 	description = "Spin up any VM Image on ZStack Central infrastructure."
 	environmentPrefix = "ZSTACK"
