@@ -76,7 +76,7 @@ class ZstackCloudProvider implements CloudProvider {
                 fieldLabel: 'Identity Api Url',
                 required: true,
                 inputType: OptionType.InputType.TEXT,
-                placeHolder: 'https://0.0.0.0:5000',
+                placeHolder: 'http://ip:8080',
                 fieldContext: 'domain'
         )
         OptionType credentials = new OptionType(

@@ -684,4 +684,9 @@ class ZstackProvisionProvider extends AbstractProvisionProvider implements Workl
     String getNodeFormat() {
         return "vm"
     }
+
+    @Override
+    Boolean createDefaultInstanceType() {
+        return false
+    }
 }
